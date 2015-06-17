@@ -20,28 +20,23 @@ public class AppletsResource {
 
     @POST
     public Response create(CreateEvent event) {
-        try {
-            AppletInstance applet = getAppletContainer().findByName(event.getApplet().getName());
-            Response.Status status;
-            if (applet == null) {
-                applet = getAppletContainer().createApplet(event.getApplet());
-                applet.start();
-                if (event.isShow()) {
-                    applet.show();
-                }
-
-                status = Response.Status.CREATED;
-            } else {
-                status = Response.Status.SEE_OTHER;
-
+        AppletInstance applet = getAppletContainer().findByName(event.getApplet().getName());
+        Response.Status status;
+        if (applet == null) {
+            applet = getAppletContainer().createApplet(event.getApplet());
+            applet.start();
+            if (event.isShow()) {
+                applet.show();
             }
 
-            AppletDescription description = applet.getDescription();
-            return Response.status(status).location(buildAppletLocation(description)).entity(description).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Response.ok().build();
+            status = Response.Status.CREATED;
+        } else {
+            status = Response.Status.SEE_OTHER;
+
         }
+
+        AppletDescription description = applet.getDescription();
+        return Response.status(status).location(buildAppletLocation(description)).entity(description).build();
     }
 
     @GET
@@ -155,6 +150,6 @@ public class AppletsResource {
     private URI buildAppletLocation(AppletDescription description) {
         UriBuilder ub = uriInfo.getAbsolutePathBuilder();
 
-        return ub.path("applets/{name}").build(description.getName());
+        return ub.path("{name}").build(description.getName());
     }
 }
