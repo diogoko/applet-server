@@ -17,6 +17,7 @@ public class AppletsResourceConfig extends ResourceConfig {
 
         addProperties(props);
         register(JacksonFeature.class);
+        register(UncaughtThrowableExceptionMapper.class);
         registerInstances(new LoggingFilter(Logger.getLogger(RestListener.class.getName()), true));
     }
 }
