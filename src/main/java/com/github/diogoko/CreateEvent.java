@@ -5,6 +5,14 @@ public class CreateEvent {
 
     private boolean show;
 
+    public CreateEvent() {
+    }
+
+    public CreateEvent(AppletDescription applet, boolean show) {
+        this.applet = applet;
+        this.show = show;
+    }
+
     public boolean isShow() {
         return show;
     }

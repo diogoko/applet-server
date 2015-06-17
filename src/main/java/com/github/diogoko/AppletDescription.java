@@ -23,6 +23,13 @@ public class AppletDescription {
 
     private Map<String, String> params;
 
+    public AppletDescription() {
+    }
+
+    public AppletDescription(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
