@@ -18,7 +18,7 @@ public class AppletContainerTest {
         description.setName("test");
         AppletInstance applet = container.createApplet(description);
 
-        assertSame("can find created applet", container.findByName("test"), applet);
+        assertSame("can find created applet", applet, container.findByName("test"));
 
         container.removeApplet("test");
         assertNull("removed applet can't be found", container.findByName("test"));
@@ -38,11 +38,11 @@ public class AppletContainerTest {
         assertTrue("applet is runnable (inter thread proxy)", applet1 instanceof Runnable);
 
         Thread appletThread1 = container.getLastCreatedThread();
-        assertNotEquals("applet's thread is not the current one", appletThread1, Thread.currentThread());
+        assertNotEquals("applet's thread is not the current one", Thread.currentThread(), appletThread1);
         assertTrue("applet's thread has been started", appletThread1.isAlive());
 
         ClassLoader appletClassLoader1 = appletThread1.getContextClassLoader();
-        assertNotEquals("applet's classloader is not the current one", appletClassLoader1, getClass().getClassLoader());
+        assertNotEquals("applet's classloader is not the current one", getClass().getClassLoader(), appletClassLoader1);
         assertTrue("applet's classloader is an AppletClassLoader", appletClassLoader1 instanceof AppletClassLoader);
 
         AppletDescription d2 = new AppletDescription();
@@ -51,11 +51,11 @@ public class AppletContainerTest {
         AppletInstance applet2 = container.createApplet(d2);
 
         assertNotNull("a name was created for the unnamed applet", applet2.getDescription().getName());
-        assertNotEquals("a non-empty name was created", applet2.getDescription().getName(), "");
+        assertNotEquals("a non-empty name was created", "", applet2.getDescription().getName());
         Thread appletThread2 = container.getLastCreatedThread();
-        assertNotEquals("the applets' threads are not the same", appletThread2, appletThread1);
+        assertNotEquals("the applets' threads are not the same", appletThread1, appletThread2);
         ClassLoader appletClassLoader2 = appletThread2.getContextClassLoader();
-        assertNotEquals("the applets' classloaders are not the same", appletClassLoader2, appletClassLoader1);
+        assertNotEquals("the applets' classloaders are not the same", appletClassLoader1, appletClassLoader2);
     }
 
     private class TestableAppletContainer extends AppletContainer {

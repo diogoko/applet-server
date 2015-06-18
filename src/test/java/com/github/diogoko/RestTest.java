@@ -1,6 +1,5 @@
 package com.github.diogoko;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
@@ -47,11 +46,11 @@ public class RestTest extends JerseyTest {
         verify(applet).start();
         verify(applet, never()).show();
 
-        assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
+        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
         URI location = new URI(response.getHeaderString("Location"));
-        assertEquals(location.getPath(), "/applets/test");
+        assertEquals("/applets/test", location.getPath());
         AppletDescription returnedDesc = readJSON(response, AppletDescription.class);
-        assertEquals(returnedDesc.getName(), "test");
+        assertEquals("test", returnedDesc.getName());
     }
 
     @Test
@@ -72,11 +71,11 @@ public class RestTest extends JerseyTest {
         inOrder.verify(applet).start();
         inOrder.verify(applet).show();
 
-        assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
+        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
         URI location = new URI(response.getHeaderString("Location"));
-        assertEquals(location.getPath(), "/applets/test");
+        assertEquals("/applets/test", location.getPath());
         AppletDescription returnedDesc = readJSON(response, AppletDescription.class);
-        assertEquals(returnedDesc.getName(), "test");
+        assertEquals("test", returnedDesc.getName());
     }
 
     @Test
@@ -99,12 +98,12 @@ public class RestTest extends JerseyTest {
         verify(applet).start();
         verify(applet, never()).show();
 
-        assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
+        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
         URI location = new URI(response.getHeaderString("Location"));
-        assertEquals(location.getPath(), "/applets/" + nameToGenerate);
+        assertEquals("/applets/" + nameToGenerate, location.getPath());
 
         AppletDescription returnedDesc = readJSON(response, AppletDescription.class);
-        assertEquals(returnedDesc.getName(), nameToGenerate);
+        assertEquals(nameToGenerate, returnedDesc.getName());
     }
 
     @Test
@@ -119,9 +118,9 @@ public class RestTest extends JerseyTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get();
 
-        assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         AppletDescription returnedDesc = readJSON(response, AppletDescription.class);
-        assertEquals(returnedDesc.getName(), "test");
+        assertEquals("test", returnedDesc.getName());
     }
 
     @Test
@@ -132,7 +131,7 @@ public class RestTest extends JerseyTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get();
 
-        assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
     }
 
     @Test
@@ -145,9 +144,9 @@ public class RestTest extends JerseyTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get();
 
-        assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         AppletInstanceState returnedState = readJSON(response, StateResult.class).getState();
-        assertEquals(returnedState, AppletInstanceState.STARTED);
+        assertEquals(AppletInstanceState.STARTED, returnedState);
     }
 
     @Test
@@ -158,7 +157,7 @@ public class RestTest extends JerseyTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get();
 
-        assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
     }
 
     @Test
@@ -175,9 +174,9 @@ public class RestTest extends JerseyTest {
 
         verify(applet).stop();
 
-        assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         AppletInstanceState returnedState = readJSON(response, StateResult.class).getState();
-        assertEquals(returnedState, AppletInstanceState.STOPPED);
+        assertEquals(AppletInstanceState.STOPPED, returnedState);
     }
 
     @Test
@@ -190,7 +189,7 @@ public class RestTest extends JerseyTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .put(Entity.entity(stateEvent, MediaType.APPLICATION_JSON_TYPE));
 
-        assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
     }
 
     @Test
@@ -204,7 +203,7 @@ public class RestTest extends JerseyTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .put(Entity.entity(stateEvent, MediaType.APPLICATION_JSON_TYPE));
 
-        assertEquals(response.getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
+        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     }
 
     @Test
@@ -215,7 +214,7 @@ public class RestTest extends JerseyTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get();
 
-        assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
     }
 
     @Test
@@ -232,9 +231,9 @@ public class RestTest extends JerseyTest {
 
         verify(applet).show();
 
-        assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         boolean returnedVisible = readJSON(response, VisibleResult.class).isVisible();
-        assertEquals(returnedVisible, true);
+        assertEquals(true, returnedVisible);
     }
 
     @Test
@@ -251,9 +250,9 @@ public class RestTest extends JerseyTest {
 
         verify(applet).hide();
 
-        assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         boolean returnedVisible = readJSON(response, VisibleResult.class).isVisible();
-        assertEquals(returnedVisible, false);
+        assertEquals(false, returnedVisible);
     }
 
     @Test
@@ -266,7 +265,7 @@ public class RestTest extends JerseyTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .put(Entity.entity(visibleEvent, MediaType.APPLICATION_JSON_TYPE));
 
-        assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
     }
 
     @Test
@@ -279,13 +278,13 @@ public class RestTest extends JerseyTest {
 
         Response response = target("applets/test/methods/sum")
                 .request(MediaType.APPLICATION_JSON_TYPE)
-                .put(Entity.entity(callMethodEvent, MediaType.APPLICATION_JSON_TYPE));
+                .post(Entity.entity(callMethodEvent, MediaType.APPLICATION_JSON_TYPE));
 
         verify(applet).callMethod("sum", new Object[] { 10, 5 });
 
-        assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         CallMethodResult returnedResult = readJSON(response, CallMethodResult.class);
-        assertEquals(returnedResult.getResult(), 15);
+        assertEquals(15, returnedResult.getResult());
         assertNull(returnedResult.getError());
     }
 
@@ -297,9 +296,9 @@ public class RestTest extends JerseyTest {
 
         Response response = target("applets/test/methods/sum")
                 .request(MediaType.APPLICATION_JSON_TYPE)
-                .put(Entity.entity(callMethodEvent, MediaType.APPLICATION_JSON_TYPE));
+                .post(Entity.entity(callMethodEvent, MediaType.APPLICATION_JSON_TYPE));
 
-        assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
     }
 
     @Test
@@ -311,14 +310,14 @@ public class RestTest extends JerseyTest {
         when(applet.callMethod("sum", new Object[] { 10, 5 }))
                 .thenThrow(new NullPointerException("test exception"));
 
-        Response response = target("applets/test/state")
+        Response response = target("applets/test/methods/sum")
                 .request(MediaType.APPLICATION_JSON_TYPE)
-                .put(Entity.entity(callMethodEvent, MediaType.APPLICATION_JSON_TYPE));
+                .post(Entity.entity(callMethodEvent, MediaType.APPLICATION_JSON_TYPE));
 
-        assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         CallMethodResult returnedResult = readJSON(response, CallMethodResult.class);
         assertNull(returnedResult.getResult());
-        assertEquals(returnedResult.getError(), new NullPointerException("test exception"));
+        assertEquals(new NullPointerException("test exception"), returnedResult.getError());
     }
 
     @Test
@@ -329,14 +328,13 @@ public class RestTest extends JerseyTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get();
 
-        assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
     }
 
     @Test
     public void destroySuccess() throws IOException {
         AppletInstance applet = mock(AppletInstance.class);
         when(container.findByName("test")).thenReturn(applet);
-        when(applet.isVisible()).thenReturn(true);
 
         Response response = target("applets/test")
                 .request(MediaType.APPLICATION_JSON_TYPE)
@@ -348,7 +346,7 @@ public class RestTest extends JerseyTest {
         inOrder.verify(applet).destroy();
         verify(container).removeApplet("test");
 
-        assertEquals(response.getStatus(), Response.Status.NO_CONTENT.getStatusCode());
+        assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
     }
 
     private <T> T readJSON(Response response, Class<T> clazz) throws IOException {

@@ -100,21 +100,21 @@ public class AppletClassLoaderTest {
 
         AppletClassLoader loader1 = new AppletClassLoader(codeBase, CLI_CLASS, null);
         Class c1 = loader1.loadClass(CLI_CLASS);
-        assertEquals(c1.getName(), CLI_CLASS);
+        assertEquals(CLI_CLASS, c1.getName());
 
         checkPreloadedClasses();
 
         AppletClassLoader loader2 = new AppletClassLoader(codeBase, CHAIN_CLASS, CHAIN_JAR);
         Class c2 = loader2.loadClass(CHAIN_CLASS);
-        assertEquals(c2.getName(), CHAIN_CLASS);
+        assertEquals(CHAIN_CLASS, c2.getName());
 
         checkPreloadedClasses();
 
         AppletClassLoader loader3 = new AppletClassLoader(codeBase, CHAIN_CLASS, CHAIN_JAR + "," + CLI_JAR);
         Class c3 = loader3.loadClass(CHAIN_CLASS);
-        assertEquals(c3.getName(), CHAIN_CLASS);
+        assertEquals(CHAIN_CLASS, c3.getName());
         Class c4 = loader3.loadClass(CLI_CLASS);
-        assertEquals(c4.getName(), CLI_CLASS);
+        assertEquals(CLI_CLASS, c4.getName());
     }
 
     private void checkPreloadedClasses() {

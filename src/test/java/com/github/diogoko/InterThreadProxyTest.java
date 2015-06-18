@@ -51,18 +51,18 @@ public class InterThreadProxyTest {
         SampleInterface ro = (SampleInterface) r;
 
         ro.m1();
-        assertEquals(o.getLastThreadAndReset(), t);
+        assertEquals(t, o.getLastThreadAndReset());
 
         int result = ro.div(10, 2);
-        assertEquals(o.getLastThreadAndReset(), t);
-        assertEquals(result, 5);
+        assertEquals(t, o.getLastThreadAndReset());
+        assertEquals(5, result);
 
         try {
             ro.div(3, 0);
             fail("thrown exception should have bubbled here");
         } catch (ArithmeticException e) {
             // ok
-            assertEquals(o.getLastThreadAndReset(), t);
+            assertEquals(t, o.getLastThreadAndReset());
         }
 
         ((Stoppable)ro).stop();

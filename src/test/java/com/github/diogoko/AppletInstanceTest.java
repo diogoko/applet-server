@@ -19,7 +19,7 @@ public class AppletInstanceTest {
 
         AppletInstanceImpl applet = new AppletInstanceImpl(desc);
         assertNull(applet.getInstance());
-        assertEquals(applet.getState(), AppletInstanceState.INACTIVE);
+        assertEquals(AppletInstanceState.INACTIVE, applet.getState());
         try {
             applet.stop();
             fail("applet can't be stopped when inactive");
@@ -34,14 +34,14 @@ public class AppletInstanceTest {
         }
 
         applet.start();
-        assertEquals(applet.getState(), AppletInstanceState.STARTED);
+        assertEquals(AppletInstanceState.STARTED, applet.getState());
         SampleApplet i = (SampleApplet) applet.getInstance();
         assertTrue(i.isCalledInit() && i.isCalledStart() && !i.isCalledStop() && !i.isCalledDestroy());
         Container iParent = getAncestor(i);
         assertTrue(iParent instanceof JFrame);
-        assertEquals(iParent.getWidth(), 123);
-        assertEquals(iParent.getHeight(), 456);
-        assertEquals(((JFrame)iParent).getTitle(), "sample - Applet");
+        assertEquals(123, iParent.getWidth());
+        assertEquals(456, iParent.getHeight());
+        assertEquals("sample - Applet", ((JFrame) iParent).getTitle());
         try {
             applet.start();
             fail("applet can't be started when already started");
@@ -56,7 +56,7 @@ public class AppletInstanceTest {
         }
 
         Object result = applet.callMethod("hello", new Object[] { "test" });
-        assertEquals(result, "hello test");
+        assertEquals("hello test", result);
 
         applet.show();
         assertTrue(iParent.isVisible());
@@ -96,5 +96,4 @@ public class AppletInstanceTest {
 
         return container;
     }
-
 }
