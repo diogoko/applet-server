@@ -1,12 +1,12 @@
 package com.github.diogoko;
 
-public class VisibleEvent {
+public class VisibleResult {
     private boolean visible;
 
-    public VisibleEvent() {
+    public VisibleResult() {
     }
 
-    public VisibleEvent(boolean visible) {
+    public VisibleResult(boolean visible) {
         this.visible = visible;
     }
 

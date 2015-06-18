@@ -30,6 +30,10 @@ public class AppletInstanceImpl implements AppletInstance {
 
     @Override
     public void start() {
+        if (state.equals(AppletInstanceState.STARTED)) {
+            return;
+        }
+
         if (!state.equals(AppletInstanceState.INACTIVE) && !state.equals(AppletInstanceState.STOPPED)) {
             throw new IllegalStateException("Applet must be INACTIVE or STOPPED to be started");
         }
@@ -62,6 +66,10 @@ public class AppletInstanceImpl implements AppletInstance {
 
     @Override
     public void show() {
+        if (!state.equals(AppletInstanceState.STARTED) && !state.equals(AppletInstanceState.STOPPED)) {
+            throw new IllegalStateException("Applet must be STARTED or STOPPED to be started");
+        }
+
         if (!visible) {
             frame.setVisible(true);
             visible = true;
@@ -70,6 +78,10 @@ public class AppletInstanceImpl implements AppletInstance {
 
     @Override
     public void hide() {
+        if (!state.equals(AppletInstanceState.STARTED) && !state.equals(AppletInstanceState.STOPPED)) {
+            throw new IllegalStateException("Applet must be STARTED or STOPPED to be started");
+        }
+
         if (visible) {
             frame.setVisible(false);
             visible = false;
@@ -78,6 +90,10 @@ public class AppletInstanceImpl implements AppletInstance {
 
     @Override
     public void stop() {
+        if (state.equals(AppletInstanceState.STOPPED)) {
+            return;
+        }
+
         if (!state.equals(AppletInstanceState.STARTED)) {
             throw new IllegalStateException("Applet must be STARTED to be stopped");
         }

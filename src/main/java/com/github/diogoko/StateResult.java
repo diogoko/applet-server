@@ -3,6 +3,13 @@ package com.github.diogoko;
 public class StateResult {
     private AppletInstanceState state;
 
+    public StateResult() {
+    }
+
+    public StateResult(AppletInstanceState state) {
+        this.state = state;
+    }
+
     public AppletInstanceState getState() {
         return state;
     }

@@ -44,7 +44,7 @@ public class AppletsResource {
     public Response getInfo(@PathParam("name") String name) {
         AppletInstance applet = getAppletContainer().findByName(name);
         if (applet == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         } else {
             return Response.ok(applet.getDescription()).build();
         }
@@ -55,11 +55,9 @@ public class AppletsResource {
     public Response getState(@PathParam("name") String name) {
         AppletInstance applet = getAppletContainer().findByName(name);
         if (applet == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         } else {
-            StateResult result = new StateResult();
-            result.setState(applet.getState());
-
+            StateResult result = new StateResult(applet.getState());
             return Response.ok(result).build();
         }
     }
@@ -69,19 +67,17 @@ public class AppletsResource {
     public Response setState(@PathParam("name") String name, StateEvent event) {
         AppletInstance applet = getAppletContainer().findByName(name);
         if (applet == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         } else {
             if (event.getState().equals(AppletInstanceState.STARTED)) {
                 applet.start();
             } else if (event.getState().equals(AppletInstanceState.STOPPED)) {
                 applet.stop();
             } else {
-                throw new IllegalArgumentException();
+                throw new WebApplicationException(Response.Status.BAD_REQUEST);
             }
 
-            StateResult result = new StateResult();
-            result.setState(applet.getState());
-
+            StateResult result = new StateResult(applet.getState());
             return Response.ok(result).build();
         }
     }
@@ -91,18 +87,19 @@ public class AppletsResource {
     public Response isVisible(@PathParam("name") String name) {
         AppletInstance applet = getAppletContainer().findByName(name);
         if (applet == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         } else {
-            return Response.ok().build();
+            VisibleResult result = new VisibleResult(applet.isVisible());
+            return Response.ok(result).build();
         }
     }
 
     @PUT
     @Path("{name}/visible")
-    public Response isVisible(@PathParam("name") String name, VisibleEvent event) {
+    public Response setVisible(@PathParam("name") String name, VisibleEvent event) {
         AppletInstance applet = getAppletContainer().findByName(name);
         if (applet == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         } else {
             if (event.isVisible()) {
                 applet.show();
@@ -110,7 +107,8 @@ public class AppletsResource {
                 applet.hide();
             }
 
-            return Response.ok().build();
+            VisibleResult result = new VisibleResult(applet.isVisible());
+            return Response.ok(result).build();
         }
     }
 
@@ -119,12 +117,16 @@ public class AppletsResource {
     public Response callMethod(@PathParam("appletName") String appletName, @PathParam("methodName") String methodName, CallMethodEvent event) {
         AppletInstance applet = getAppletContainer().findByName(appletName);
         if (applet == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         } else {
-            Object methodResult = applet.callMethod(methodName, event.getArgs());
-
             CallMethodResult result = new CallMethodResult();
-            result.setResult(methodResult);
+
+            try {
+                Object methodResult = applet.callMethod(methodName, event.getArgs());
+                result.setResult(methodResult);
+            } catch (Exception e) {
+                result.setError(e);
+            }
 
             return Response.ok(result).build();
         }
@@ -135,7 +137,7 @@ public class AppletsResource {
     public Response destroy(String name) {
         AppletInstance applet = getAppletContainer().findByName(name);
         if (applet == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         } else {
             applet.hide();
             applet.stop();
@@ -143,7 +145,7 @@ public class AppletsResource {
 
             getAppletContainer().removeApplet(name);
 
-            return Response.ok().build();
+            return Response.noContent().build();
         }
     }
 

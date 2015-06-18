@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
+import org.mockito.InOrder;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
@@ -15,13 +16,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class RestTest extends JerseyTest {
 
@@ -47,10 +44,38 @@ public class RestTest extends JerseyTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(startEvent, MediaType.APPLICATION_JSON_TYPE));
 
+        verify(applet).start();
+        verify(applet, never()).show();
+
         assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
         URI location = new URI(response.getHeaderString("Location"));
         assertEquals(location.getPath(), "/applets/test");
-        AppletDescription returnedDesc = readDescription(response);
+        AppletDescription returnedDesc = readJSON(response, AppletDescription.class);
+        assertEquals(returnedDesc.getName(), "test");
+    }
+
+    @Test
+    public void createNamedAndShow() throws URISyntaxException, IOException {
+        AppletDescription desc = new AppletDescription("test");
+        CreateEvent startEvent = new CreateEvent(desc, true);
+
+        AppletInstance applet = mock(AppletInstance.class);
+        when(container.findByName("test")).thenReturn(null);
+        when(container.createApplet(any(AppletDescription.class))).thenReturn(applet);
+        when(applet.getDescription()).thenReturn(desc);
+
+        Response response = target("applets")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.entity(startEvent, MediaType.APPLICATION_JSON_TYPE));
+
+        InOrder inOrder = inOrder(applet);
+        inOrder.verify(applet).start();
+        inOrder.verify(applet).show();
+
+        assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
+        URI location = new URI(response.getHeaderString("Location"));
+        assertEquals(location.getPath(), "/applets/test");
+        AppletDescription returnedDesc = readJSON(response, AppletDescription.class);
         assertEquals(returnedDesc.getName(), "test");
     }
 
@@ -71,17 +96,19 @@ public class RestTest extends JerseyTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(startEvent, MediaType.APPLICATION_JSON_TYPE));
 
+        verify(applet).start();
+        verify(applet, never()).show();
+
         assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
         URI location = new URI(response.getHeaderString("Location"));
         assertEquals(location.getPath(), "/applets/" + nameToGenerate);
 
-        AppletDescription returnedDesc = readDescription(response);
+        AppletDescription returnedDesc = readJSON(response, AppletDescription.class);
         assertEquals(returnedDesc.getName(), nameToGenerate);
     }
 
-    // TODO: *NotFound
     @Test
-    public void getInfo() throws IOException {
+    public void getInfoSuccess() throws IOException {
         AppletDescription desc = new AppletDescription("test");
 
         AppletInstance applet = mock(AppletInstance.class);
@@ -93,12 +120,23 @@ public class RestTest extends JerseyTest {
                 .get();
 
         assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
-        AppletDescription returnedDesc = readDescription(response);
+        AppletDescription returnedDesc = readJSON(response, AppletDescription.class);
         assertEquals(returnedDesc.getName(), "test");
     }
 
     @Test
-    public void getState() throws IOException {
+    public void getInfoNotFound() throws IOException {
+        when(container.findByName("test")).thenReturn(null);
+
+        Response response = target("applets/test")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .get();
+
+        assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    public void getStateSuccess() throws IOException {
         AppletInstance applet = mock(AppletInstance.class);
         when(container.findByName("test")).thenReturn(applet);
         when(applet.getState()).thenReturn(AppletInstanceState.STARTED);
@@ -108,12 +146,21 @@ public class RestTest extends JerseyTest {
                 .get();
 
         assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
-        AppletInstanceState returnedState = readState(response);
+        AppletInstanceState returnedState = readJSON(response, StateResult.class).getState();
         assertEquals(returnedState, AppletInstanceState.STARTED);
     }
 
-    // TODO: *NotFound
-    // TODO: *InvalidTransition
+    @Test
+    public void getStateNotFound() throws IOException {
+        when(container.findByName("test")).thenReturn(null);
+
+        Response response = target("applets/test/state")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .get();
+
+        assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+    }
+
     @Test
     public void setStateSuccess() throws IOException {
         StateEvent stateEvent = new StateEvent(AppletInstanceState.STOPPED);
@@ -127,24 +174,185 @@ public class RestTest extends JerseyTest {
                 .put(Entity.entity(stateEvent, MediaType.APPLICATION_JSON_TYPE));
 
         verify(applet).stop();
+
         assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
-        AppletInstanceState returnedState = readState(response);
+        AppletInstanceState returnedState = readJSON(response, StateResult.class).getState();
         assertEquals(returnedState, AppletInstanceState.STOPPED);
     }
 
-    // TODO: *visible*
+    @Test
+    public void setStateNotFound() throws IOException {
+        StateEvent stateEvent = new StateEvent(AppletInstanceState.STOPPED);
 
-    // TODO: *callMethod*
+        when(container.findByName("test")).thenReturn(null);
 
-    // TODO: *destroy*
+        Response response = target("applets/test/state")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .put(Entity.entity(stateEvent, MediaType.APPLICATION_JSON_TYPE));
 
-    private AppletInstanceState readState(Response response) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(response.readEntity(String.class), StateResult.class).getState();
+        assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
     }
 
-    private AppletDescription readDescription(Response response) throws IOException {
+    @Test
+    public void setStateInvalidTransition() throws IOException {
+        StateEvent stateEvent = new StateEvent(AppletInstanceState.DESTROYED);
+
+        AppletInstance applet = mock(AppletInstance.class);
+        when(container.findByName("test")).thenReturn(applet);
+
+        Response response = target("applets/test/state")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .put(Entity.entity(stateEvent, MediaType.APPLICATION_JSON_TYPE));
+
+        assertEquals(response.getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
+    }
+
+    @Test
+    public void getVisibleNotFound() throws IOException {
+        when(container.findByName("test")).thenReturn(null);
+
+        Response response = target("applets/test/visible")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .get();
+
+        assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    public void setVisibleTrueSuccess() throws IOException {
+        VisibleEvent visibleEvent = new VisibleEvent(true);
+
+        AppletInstance applet = mock(AppletInstance.class);
+        when(container.findByName("test")).thenReturn(applet);
+        when(applet.isVisible()).thenReturn(true);
+
+        Response response = target("applets/test/visible")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .put(Entity.entity(visibleEvent, MediaType.APPLICATION_JSON_TYPE));
+
+        verify(applet).show();
+
+        assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
+        boolean returnedVisible = readJSON(response, VisibleResult.class).isVisible();
+        assertEquals(returnedVisible, true);
+    }
+
+    @Test
+    public void setVisibleFalseSuccess() throws IOException {
+        VisibleEvent visibleEvent = new VisibleEvent(false);
+
+        AppletInstance applet = mock(AppletInstance.class);
+        when(container.findByName("test")).thenReturn(applet);
+        when(applet.isVisible()).thenReturn(false);
+
+        Response response = target("applets/test/visible")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .put(Entity.entity(visibleEvent, MediaType.APPLICATION_JSON_TYPE));
+
+        verify(applet).hide();
+
+        assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
+        boolean returnedVisible = readJSON(response, VisibleResult.class).isVisible();
+        assertEquals(returnedVisible, false);
+    }
+
+    @Test
+    public void setVisibleNotFound() throws IOException {
+        VisibleEvent visibleEvent = new VisibleEvent(true);
+
+        when(container.findByName("test")).thenReturn(null);
+
+        Response response = target("applets/test/visible")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .put(Entity.entity(visibleEvent, MediaType.APPLICATION_JSON_TYPE));
+
+        assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    public void callMethodSuccess() throws IOException {
+        CallMethodEvent callMethodEvent = new CallMethodEvent(new Object[] { 10, 5 });
+
+        AppletInstance applet = mock(AppletInstance.class);
+        when(container.findByName("test")).thenReturn(applet);
+        when(applet.callMethod("sum", new Object[] { 10, 5 })).thenReturn(15);
+
+        Response response = target("applets/test/methods/sum")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .put(Entity.entity(callMethodEvent, MediaType.APPLICATION_JSON_TYPE));
+
+        verify(applet).callMethod("sum", new Object[] { 10, 5 });
+
+        assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
+        CallMethodResult returnedResult = readJSON(response, CallMethodResult.class);
+        assertEquals(returnedResult.getResult(), 15);
+        assertNull(returnedResult.getError());
+    }
+
+    @Test
+    public void callMethodNotFound() throws IOException {
+        CallMethodEvent callMethodEvent = new CallMethodEvent(new Object[] { 10, 5 });
+
+        when(container.findByName("test")).thenReturn(null);
+
+        Response response = target("applets/test/methods/sum")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .put(Entity.entity(callMethodEvent, MediaType.APPLICATION_JSON_TYPE));
+
+        assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    public void callMethodWithError() throws IOException {
+        CallMethodEvent callMethodEvent = new CallMethodEvent(new Object[] { 10, 5 });
+
+        AppletInstance applet = mock(AppletInstance.class);
+        when(container.findByName("test")).thenReturn(applet);
+        when(applet.callMethod("sum", new Object[] { 10, 5 }))
+                .thenThrow(new NullPointerException("test exception"));
+
+        Response response = target("applets/test/state")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .put(Entity.entity(callMethodEvent, MediaType.APPLICATION_JSON_TYPE));
+
+        assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
+        CallMethodResult returnedResult = readJSON(response, CallMethodResult.class);
+        assertNull(returnedResult.getResult());
+        assertEquals(returnedResult.getError(), new NullPointerException("test exception"));
+    }
+
+    @Test
+    public void destroyNotFound() throws IOException {
+        when(container.findByName("test")).thenReturn(null);
+
+        Response response = target("applets/test")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .get();
+
+        assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    public void destroySuccess() throws IOException {
+        AppletInstance applet = mock(AppletInstance.class);
+        when(container.findByName("test")).thenReturn(applet);
+        when(applet.isVisible()).thenReturn(true);
+
+        Response response = target("applets/test")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .delete();
+
+        InOrder inOrder = inOrder(applet);
+        inOrder.verify(applet).hide();
+        inOrder.verify(applet).stop();
+        inOrder.verify(applet).destroy();
+        verify(container).removeApplet("test");
+
+        assertEquals(response.getStatus(), Response.Status.NO_CONTENT.getStatusCode());
+    }
+
+    private <T> T readJSON(Response response, Class<T> clazz) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(response.readEntity(String.class), AppletDescription.class);
+        return mapper.readValue(response.readEntity(String.class), clazz);
     }
 }
