@@ -317,7 +317,8 @@ public class RestTest extends JerseyTest {
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         CallMethodResult returnedResult = readJSON(response, CallMethodResult.class);
         assertNull(returnedResult.getResult());
-        assertEquals(new NullPointerException("test exception"), returnedResult.getError());
+        assertEquals("java.lang.NullPointerException", returnedResult.getError().getClassName());
+        assertEquals("test exception", returnedResult.getError().getMessage());
     }
 
     @Test

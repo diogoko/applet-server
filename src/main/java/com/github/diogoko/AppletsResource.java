@@ -125,7 +125,7 @@ public class AppletsResource {
                 Object methodResult = applet.callMethod(methodName, event.getArgs());
                 result.setResult(methodResult);
             } catch (Exception e) {
-                result.setError(e);
+                result.setError(new ExceptionResult(e.getClass().getName(), e.getMessage()));
             }
 
             return Response.ok(result).build();
@@ -134,7 +134,7 @@ public class AppletsResource {
 
     @DELETE
     @Path("{name}")
-    public Response destroy(String name) {
+    public Response destroy(@PathParam("name") String name) {
         AppletInstance applet = getAppletContainer().findByName(name);
         if (applet == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
