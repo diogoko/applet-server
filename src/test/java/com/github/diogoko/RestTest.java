@@ -24,6 +24,8 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -38,7 +40,9 @@ public class RestTest extends JerseyTest {
     @Override
     protected Application configure() {
         container = mock(AppletContainer.class);
-        return new AppletsResourceConfig(container);
+        Options options = new Options();
+        options.setAllowOrigin(new HashSet<>(Arrays.asList("*")));
+        return new AppletsResourceConfig(container, options);
     }
 
     @Test

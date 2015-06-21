@@ -5,6 +5,9 @@ import com.github.diogoko.applet.AppletInstance;
 import com.github.diogoko.rest.RestListener;
 import com.github.diogoko.rest.event.CreateEvent;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AppletServer {
 
     private AppletContainer appletContainer;
@@ -14,22 +17,14 @@ public class AppletServer {
     public static void main(String[] args) {
         AppletServer a = new AppletServer();
         a.start();
-
-//        AppletDescription d = new AppletDescription();
-//        //d.setCode("com.github.diogoko.HelloWorld2");
-//        //d.setArchive("file:///C/Users/Diogo/IdeaProjects/applet-server/target/classes/com/github/diogoko/HelloWorld.class");
-//        d.setCode("HelloWorld");
-//        d.setArchive("file:///C:/Users/Diogo/Downloads/HelloWorld.class");
-//        StartAppletEvent e = new StartAppletEvent();
-//        e.setShow(true);
-//        e.setApplet(d);
-//        a.startApplet(e);
     }
 
     private void start() {
         appletContainer = new AppletContainer();
 
-        restListener = new RestListener(appletContainer);
+        Map<String, String> optionsMap = new HashMap<>();
+        optionsMap.put(Options.PORT, "9998");
+        restListener = new RestListener(appletContainer, new Options(optionsMap));
         restListener.start();
     }
 

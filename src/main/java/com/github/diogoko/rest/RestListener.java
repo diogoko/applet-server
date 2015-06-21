@@ -1,5 +1,6 @@
 package com.github.diogoko.rest;
 
+import com.github.diogoko.Options;
 import com.github.diogoko.applet.AppletContainer;
 import com.sun.net.httpserver.HttpServer;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
@@ -11,13 +12,16 @@ import java.net.URI;
 public class RestListener {
     private final AppletContainer appletContainer;
 
-    public RestListener(AppletContainer appletContainer) {
+    private Options options;
+
+    public RestListener(AppletContainer appletContainer, Options options) {
         this.appletContainer = appletContainer;
+        this.options = options;
     }
 
     public void start() {
-        URI baseUri = UriBuilder.fromUri("http://localhost/").port(9998).build();
-        ResourceConfig config = new AppletsResourceConfig(appletContainer);
+        URI baseUri = UriBuilder.fromUri("http://localhost/").port(options.getPort()).build();
+        ResourceConfig config = new AppletsResourceConfig(appletContainer, options);
         HttpServer server = JdkHttpServerFactory.createHttpServer(baseUri, config);
     }
 }
