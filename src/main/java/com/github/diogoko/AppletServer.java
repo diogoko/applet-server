@@ -5,8 +5,8 @@ import com.github.diogoko.applet.AppletInstance;
 import com.github.diogoko.rest.RestListener;
 import com.github.diogoko.rest.event.CreateEvent;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
 
 public class AppletServer {
 
@@ -14,17 +14,16 @@ public class AppletServer {
 
     private RestListener restListener;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         AppletServer a = new AppletServer();
         a.start();
     }
 
-    private void start() {
+    private void start() throws IOException {
         appletContainer = new AppletContainer();
 
-        Map<String, String> optionsMap = new HashMap<>();
-        optionsMap.put(Options.PORT, "9998");
-        restListener = new RestListener(appletContainer, new Options(optionsMap));
+        Options options = new Options(new File("./server.properties"));
+        restListener = new RestListener(appletContainer, options);
         restListener.start();
     }
 
