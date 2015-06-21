@@ -1,4 +1,4 @@
-package com.github.diogoko;
+package com.github.diogoko.rest.event;
 
 public class CallMethodEvent {
     private Object[] args;

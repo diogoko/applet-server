@@ -1,5 +1,8 @@
 package com.github.diogoko;
 
+import com.github.diogoko.applet.AppletDescription;
+import com.github.diogoko.applet.AppletInstanceImpl;
+import com.github.diogoko.applet.AppletInstanceState;
 import org.junit.Test;
 
 import javax.swing.*;

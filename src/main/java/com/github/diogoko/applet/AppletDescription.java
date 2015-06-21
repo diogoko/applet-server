@@ -1,4 +1,4 @@
-package com.github.diogoko;
+package com.github.diogoko.applet;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

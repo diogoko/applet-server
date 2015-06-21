@@ -1,6 +1,18 @@
 package com.github.diogoko;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.diogoko.applet.AppletContainer;
+import com.github.diogoko.applet.AppletDescription;
+import com.github.diogoko.applet.AppletInstance;
+import com.github.diogoko.applet.AppletInstanceState;
+import com.github.diogoko.rest.AppletsResourceConfig;
+import com.github.diogoko.rest.event.CallMethodEvent;
+import com.github.diogoko.rest.event.CreateEvent;
+import com.github.diogoko.rest.event.StateEvent;
+import com.github.diogoko.rest.event.VisibleEvent;
+import com.github.diogoko.rest.result.CallMethodResult;
+import com.github.diogoko.rest.result.StateResult;
+import com.github.diogoko.rest.result.VisibleResult;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -9,13 +21,13 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 

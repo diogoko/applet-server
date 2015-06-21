@@ -1,17 +1,12 @@
-package com.github.diogoko;
+package com.github.diogoko.rest;
 
+import com.github.diogoko.applet.AppletContainer;
 import com.sun.net.httpserver.HttpServer;
-import org.glassfish.jersey.filter.LoggingFilter;
-import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.ServerProperties;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Logger;
 
 public class RestListener {
     private final AppletContainer appletContainer;

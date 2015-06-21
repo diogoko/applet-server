@@ -1,4 +1,4 @@
-package com.github.diogoko;
+package com.github.diogoko.rest.result;
 
 public class VisibleResult {
     private boolean visible;

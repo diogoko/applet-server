@@ -1,12 +1,14 @@
-package com.github.diogoko;
+package com.github.diogoko.rest.event;
 
-public class StateResult {
+import com.github.diogoko.applet.AppletInstanceState;
+
+public class StateEvent {
     private AppletInstanceState state;
 
-    public StateResult() {
+    public StateEvent() {
     }
 
-    public StateResult(AppletInstanceState state) {
+    public StateEvent(AppletInstanceState state) {
         this.state = state;
     }
 

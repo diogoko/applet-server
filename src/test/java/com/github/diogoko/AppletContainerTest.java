@@ -1,5 +1,9 @@
 package com.github.diogoko;
 
+import com.github.diogoko.applet.AppletClassLoader;
+import com.github.diogoko.applet.AppletContainer;
+import com.github.diogoko.applet.AppletDescription;
+import com.github.diogoko.applet.AppletInstance;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

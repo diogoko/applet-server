@@ -1,5 +1,6 @@
 package com.github.diogoko;
 
+import com.github.diogoko.applet.AppletClassLoader;
 import org.apache.commons.io.FilenameUtils;
 import org.junit.Test;
 

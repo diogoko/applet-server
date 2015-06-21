@@ -1,4 +1,4 @@
-package com.github.diogoko;
+package com.github.diogoko.threading;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;

@@ -1,4 +1,6 @@
-package com.github.diogoko;
+package com.github.diogoko.rest.event;
+
+import com.github.diogoko.applet.AppletDescription;
 
 public class CreateEvent {
     private AppletDescription applet;

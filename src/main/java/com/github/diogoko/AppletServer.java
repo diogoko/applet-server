@@ -1,5 +1,10 @@
 package com.github.diogoko;
 
+import com.github.diogoko.applet.AppletContainer;
+import com.github.diogoko.applet.AppletInstance;
+import com.github.diogoko.rest.RestListener;
+import com.github.diogoko.rest.event.CreateEvent;
+
 public class AppletServer {
 
     private AppletContainer appletContainer;

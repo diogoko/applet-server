@@ -1,10 +1,10 @@
 package com.github.diogoko;
 
+import com.github.diogoko.threading.InterThreadProxy;
+import com.github.diogoko.threading.Stoppable;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class InterThreadProxyTest {
     public interface SampleInterface {

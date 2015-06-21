@@ -1,4 +1,4 @@
-package com.github.diogoko;
+package com.github.diogoko.applet;
 
 import org.apache.commons.io.IOUtils;
 

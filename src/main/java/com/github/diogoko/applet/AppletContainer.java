@@ -1,4 +1,6 @@
-package com.github.diogoko;
+package com.github.diogoko.applet;
+
+import com.github.diogoko.threading.InterThreadProxy;
 
 import java.util.HashMap;
 import java.util.Map;

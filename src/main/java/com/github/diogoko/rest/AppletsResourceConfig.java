@@ -1,5 +1,6 @@
-package com.github.diogoko;
+package com.github.diogoko.rest;
 
+import com.github.diogoko.applet.AppletContainer;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
