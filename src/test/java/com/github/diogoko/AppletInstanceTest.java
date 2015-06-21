@@ -43,12 +43,6 @@ public class AppletInstanceTest {
         assertEquals(456, iParent.getHeight());
         assertEquals("sample - Applet", ((JFrame) iParent).getTitle());
         try {
-            applet.start();
-            fail("applet can't be started when already started");
-        } catch (IllegalStateException e) {
-            // ok
-        }
-        try {
             applet.destroy();
             fail("applet can't be destroyed when started");
         } catch (IllegalStateException e) {
@@ -83,7 +77,7 @@ public class AppletInstanceTest {
         }
         try {
             applet.stop();
-            fail("applet can't be destroyed when alread destroyed");
+            fail("applet can't be destroyed when already destroyed");
         } catch (IllegalStateException e) {
             // ok
         }
