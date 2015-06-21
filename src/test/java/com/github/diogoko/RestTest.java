@@ -13,10 +13,13 @@ import com.github.diogoko.rest.event.VisibleEvent;
 import com.github.diogoko.rest.result.CallMethodResult;
 import com.github.diogoko.rest.result.StateResult;
 import com.github.diogoko.rest.result.VisibleResult;
+import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
 import org.mockito.InOrder;
 
+import javax.ws.rs.client.ClientRequestContext;
+import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
@@ -43,6 +46,11 @@ public class RestTest extends JerseyTest {
         Options options = new Options();
         options.setAllowOrigin(new HashSet<>(Arrays.asList("*")));
         return new AppletsResourceConfig(container, options);
+    }
+
+    @Override
+    protected void configureClient(ClientConfig config) {
+        config.register(FixedOriginRequestFilter.class);
     }
 
     @Test
@@ -369,5 +377,12 @@ public class RestTest extends JerseyTest {
     private <T> T readJSON(Response response, Class<T> clazz) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(response.readEntity(String.class), clazz);
+    }
+
+    public static class FixedOriginRequestFilter implements ClientRequestFilter {
+        @Override
+        public void filter(ClientRequestContext requestContext) throws IOException {
+            requestContext.getHeaders().add("Origin", "http://test.com");
+        }
     }
 }
