@@ -72,4 +72,30 @@ public class CorsTest extends JerseyTest {
         assertEquals("GET, POST, PUT, DELETE", response.getHeaderString("Access-Control-Allow-Methods"));
         assertEquals("Content-Type", response.getHeaderString("Access-Control-Allow-Headers"));
     }
+
+    @Test
+    public void optionsIncorrectRequest() {
+        Response response = target("applets/test")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .header("Origin", "http://samplezz.com")
+                .options();
+
+        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+        assertNull(response.getHeaderString("Access-Control-Allow-Origin"));
+        assertNull(response.getHeaderString("Access-Control-Allow-Methods"));
+        assertNull(response.getHeaderString("Access-Control-Allow-Headers"));
+    }
+
+    @Test
+    public void optionsCorrectRequest() {
+        Response response = target("applets/test")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .header("Origin", "http://sample.com")
+                .options();
+
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("http://sample.com", response.getHeaderString("Access-Control-Allow-Origin"));
+        assertEquals("GET, POST, PUT, DELETE", response.getHeaderString("Access-Control-Allow-Methods"));
+        assertEquals("Content-Type", response.getHeaderString("Access-Control-Allow-Headers"));
+    }
 }
