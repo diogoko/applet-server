@@ -14,4 +14,4 @@ Its already possible to start simple applets from [The Java Tutorials](https://d
 
 # License
 
-ember-cli-auto-router is MIT Licensed.
+applet-server is MIT Licensed.
