@@ -14,15 +14,19 @@
             <outputDirectory>/</outputDirectory>
             <source>target/applet-server.jar</source>
         </file>
+        
+        <file>
+            <outputDirectory>/</outputDirectory>
+            <source>src/main/resources/server.properties</source>
+        </file>
     </files>
-    
+
     <fileSets>
         <fileSet>
             <outputDirectory>/</outputDirectory>
             
             <includes>
-                <include>/*.md</include>
-                <include>**/*.properties</include>
+                <include>*.md</include>
             </includes>
         </fileSet>
     </fileSets>
