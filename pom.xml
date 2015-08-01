@@ -86,7 +86,7 @@
           
           <archive>
             <manifest>
-              <mainClass>com.diogoko.github.AppletServer</mainClass>
+              <mainClass>com.github.diogoko.AppletServer</mainClass>
               <addClasspath>true</addClasspath>
               <classpathPrefix>lib/</classpathPrefix> 
             </manifest>
