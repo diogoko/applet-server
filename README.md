@@ -52,19 +52,35 @@ Using `*` means that any origin is allowed.
 
 ## POST /applets
 
+Start an applet, creating it if necessary.
+
 ## GET /applets/{name}
+
+Get information about an existing applet.
 
 ## GET /applets/{name}/state
 
+Get the current state of an applet.
+
 ## PUT /applets/{name}/state
+
+Change the state of an applet. This can be used to stop or restart an applet.
 
 ## GET /applets/{name}/visible
 
+Check if an applet is currently visible.
+
 ## PUT /applets/{name}/visible
+
+Show or hide an applet. 
 
 ## POST /applets/{appletName}/methods/{methodName}
 
+Call a method from an started applet.
+
 ## DELETE /applets/{name}
+
+Destroy an applet.
 
 # License
 
