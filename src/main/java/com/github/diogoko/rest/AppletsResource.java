@@ -44,7 +44,7 @@ public class AppletsResource {
 
             status = Response.Status.CREATED;
         } else {
-            status = Response.Status.SEE_OTHER;
+            status = Response.Status.OK;
 
         }
 
