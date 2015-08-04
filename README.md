@@ -80,14 +80,14 @@ The `applet` field has the format:
 
 The response is an object with the following fields:
 
-| Field    | Type   | Default     | Description                                                                                                                               |
-|----------|--------|-------------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| name     | string | (generated) | The name that identifies the applet                                                                                                       |
-| codeBase | string |             | The root URL from where `code` and `archive` will be downloaded                                                                           |
-| code     | string |             | The main class of the applet. A suffix of `.class` will be ignored. Paths are relative to the `codeBase` parameter.                       |
-| archive  | string | null        | The comma-separated list of JAR files that contain the applet's classes and dependencies. Paths are relative to the `codeBase` parameter. |
-| width    | number | 400         | The width of the applet if it's visible                                                                                                   |
-| height   | number | 300         | The height of the applet if it's visible                                                                                                  |
+| Field    | Type   | Description                                                                                                                               |
+|----------|--------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| name     | string | The name that identifies the applet                                                                                                       |
+| codeBase | string | The root URL from where `code` and `archive` will be downloaded                                                                           |
+| code     | string | The main class of the applet. A suffix of `.class` will be ignored. Paths are relative to the `codeBase` parameter.                       |
+| archive  | string | The comma-separated list of JAR files that contain the applet's classes and dependencies. Paths are relative to the `codeBase` parameter. |
+| width    | number | The width of the applet if it's visible                                                                                                   |
+| height   | number | The height of the applet if it's visible                                                                                                  |
 
 ## GET /applets/{name}
 
@@ -97,14 +97,14 @@ Get information about an existing applet.
 
 The response is an object with the following fields:
 
-| Field    | Type   | Default     | Description                                                                                                                               |
-|----------|--------|-------------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| name     | string | (generated) | The name that identifies the applet                                                                                                       |
-| codeBase | string |             | The root URL from where `code` and `archive` will be downloaded                                                                           |
-| code     | string |             | The main class of the applet. A suffix of `.class` will be ignored. Paths are relative to the `codeBase` parameter.                       |
-| archive  | string | null        | The comma-separated list of JAR files that contain the applet's classes and dependencies. Paths are relative to the `codeBase` parameter. |
-| width    | number | 400         | The width of the applet if it's visible                                                                                                   |
-| height   | number | 300         | The height of the applet if it's visible                                                                                                  |
+| Field    | Type   | Description                                                                                                                               |
+|----------|--------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| name     | string | The name that identifies the applet                                                                                                       |
+| codeBase | string | The root URL from where `code` and `archive` will be downloaded                                                                           |
+| code     | string | The main class of the applet. A suffix of `.class` will be ignored. Paths are relative to the `codeBase` parameter.                       |
+| archive  | string | The comma-separated list of JAR files that contain the applet's classes and dependencies. Paths are relative to the `codeBase` parameter. |
+| width    | number | The width of the applet if it's visible                                                                                                   |
+| height   | number | The height of the applet if it's visible                                                                                                  |
 
 ## GET /applets/{name}/state
 
