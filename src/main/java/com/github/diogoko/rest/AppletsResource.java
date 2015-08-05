@@ -15,7 +15,6 @@ import com.github.diogoko.rest.result.VisibleResult;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.net.URI;
 
 @Path("applets")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -45,11 +44,10 @@ public class AppletsResource {
             status = Response.Status.CREATED;
         } else {
             status = Response.Status.OK;
-
         }
 
         AppletDescription description = applet.getDescription();
-        return Response.status(status).location(buildAppletLocation(description)).entity(description).build();
+        return Response.status(status).entity(description).build();
     }
 
     @GET
@@ -160,11 +158,5 @@ public class AppletsResource {
 
             return Response.noContent().build();
         }
-    }
-
-    private URI buildAppletLocation(AppletDescription description) {
-        UriBuilder ub = uriInfo.getAbsolutePathBuilder();
-
-        return ub.path("{name}").build(description.getName());
     }
 }

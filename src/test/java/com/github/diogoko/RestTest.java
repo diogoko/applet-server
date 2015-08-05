@@ -25,7 +25,6 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -71,8 +70,29 @@ public class RestTest extends JerseyTest {
         verify(applet, never()).show();
 
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
-        URI location = new URI(response.getHeaderString("Location"));
-        assertEquals("/applets/test", location.getPath());
+        assertNull(response.getHeaderString("Location"));
+        AppletDescription returnedDesc = readJSON(response, AppletDescription.class);
+        assertEquals("test", returnedDesc.getName());
+    }
+
+    @Test
+    public void createExisting() throws URISyntaxException, IOException {
+        AppletDescription desc = new AppletDescription("test");
+        CreateEvent startEvent = new CreateEvent(desc, false);
+
+        AppletInstance applet = mock(AppletInstance.class);
+        when(container.findByName("test")).thenReturn(applet);
+        when(applet.getDescription()).thenReturn(desc);
+
+        Response response = target("applets")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.entity(startEvent, MediaType.APPLICATION_JSON_TYPE));
+
+        verify(applet, never()).start();
+        verify(applet, never()).show();
+
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertNull(response.getHeaderString("Location"));
         AppletDescription returnedDesc = readJSON(response, AppletDescription.class);
         assertEquals("test", returnedDesc.getName());
     }
@@ -96,8 +116,7 @@ public class RestTest extends JerseyTest {
         inOrder.verify(applet).show();
 
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
-        URI location = new URI(response.getHeaderString("Location"));
-        assertEquals("/applets/test", location.getPath());
+        assertNull(response.getHeaderString("Location"));
         AppletDescription returnedDesc = readJSON(response, AppletDescription.class);
         assertEquals("test", returnedDesc.getName());
     }
@@ -123,8 +142,7 @@ public class RestTest extends JerseyTest {
         verify(applet, never()).show();
 
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
-        URI location = new URI(response.getHeaderString("Location"));
-        assertEquals("/applets/" + nameToGenerate, location.getPath());
+        assertNull(response.getHeaderString("Location"));
 
         AppletDescription returnedDesc = readJSON(response, AppletDescription.class);
         assertEquals(nameToGenerate, returnedDesc.getName());

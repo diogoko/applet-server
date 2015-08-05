@@ -1,9 +1,7 @@
 package com.github.diogoko;
 
 import com.github.diogoko.applet.AppletContainer;
-import com.github.diogoko.applet.AppletInstance;
 import com.github.diogoko.rest.RestListener;
-import com.github.diogoko.rest.event.CreateEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,41 +25,4 @@ public class AppletServer {
         restListener.start();
     }
 
-    public void startApplet(CreateEvent event) {
-    }
-
-    public void showApplet(String appletName) {
-
-    }
-
-    public void hideApplet(String appletName) {
-
-    }
-
-    public void stopApplet(String appletName) {
-        AppletInstance applet = appletContainer.findByName(appletName);
-        // TODO: check null
-
-//        applet.hide();
-//        applet.stop();
-    }
-
-    public void destroyApplet(String appletName) {
-        AppletInstance applet = appletContainer.findByName(appletName);
-        // TODO: check null
-
-//        applet.hide();
-//        applet.stop();
-//        applet.destroy();
-
-        appletContainer.removeApplet(appletName);
-    }
-
-    public Object callMethod(String appletName, String methodName, Object[] args) {
-        AppletInstance applet = appletContainer.findByName(appletName);
-        // TODO: check null
-
-//        return applet.callMethod(methodName, args);
-        return null;
-    }
 }
