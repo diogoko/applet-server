@@ -9,7 +9,7 @@ import com.github.diogoko.rest.event.CreateEvent;
 import com.github.diogoko.rest.event.StateEvent;
 import com.github.diogoko.rest.event.VisibleEvent;
 import com.github.diogoko.rest.result.CallMethodResult;
-import com.github.diogoko.rest.result.ExceptionResult;
+import com.github.diogoko.rest.result.ErrorResult;
 import com.github.diogoko.rest.result.StateResult;
 import com.github.diogoko.rest.result.VisibleResult;
 
@@ -136,7 +136,7 @@ public class AppletsResource {
                 Object methodResult = applet.callMethod(methodName, event.getArgs());
                 result.setResult(methodResult);
             } catch (Exception e) {
-                result.setError(new ExceptionResult(e.getClass().getName(), e.getMessage()));
+                result.setError(new ErrorResult(e.getClass().getName(), e.getMessage()));
             }
 
             return Response.ok(result).build();

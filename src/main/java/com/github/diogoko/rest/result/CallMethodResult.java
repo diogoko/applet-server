@@ -3,7 +3,7 @@ package com.github.diogoko.rest.result;
 public class CallMethodResult {
     private Object result;
 
-    private ExceptionResult error;
+    private ErrorResult error;
 
     public CallMethodResult() {
     }
@@ -12,7 +12,7 @@ public class CallMethodResult {
         this.result = result;
     }
 
-    public CallMethodResult(ExceptionResult error) {
+    public CallMethodResult(ErrorResult error) {
         this.error = error;
     }
 
@@ -24,11 +24,11 @@ public class CallMethodResult {
         this.result = result;
     }
 
-    public ExceptionResult getError() {
+    public ErrorResult getError() {
         return error;
     }
 
-    public void setError(ExceptionResult error) {
+    public void setError(ErrorResult error) {
         this.error = error;
     }
 }

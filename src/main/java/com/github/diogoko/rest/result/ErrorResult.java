@@ -1,14 +1,14 @@
 package com.github.diogoko.rest.result;
 
-public class ExceptionResult {
+public class ErrorResult {
     private String className;
 
     private String message;
 
-    public ExceptionResult() {
+    public ErrorResult() {
     }
 
-    public ExceptionResult(String className, String message) {
+    public ErrorResult(String className, String message) {
         this.className = className;
         this.message = message;
     }

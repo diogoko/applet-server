@@ -13,6 +13,8 @@ public class InterThreadProxyTest {
         Thread getLastThreadAndReset();
 
         int div(int a, int b);
+
+        void triggerError();
     }
 
     public class SampleInterfaceImpl implements SampleInterface {
@@ -34,6 +36,12 @@ public class InterThreadProxyTest {
         public int div(int a, int b) {
             lastThread = Thread.currentThread();
             return a / b;
+        }
+
+        @Override
+        public void triggerError() {
+            lastThread = Thread.currentThread();
+            throw new Error("not an Exception");
         }
     }
 
@@ -63,6 +71,15 @@ public class InterThreadProxyTest {
         } catch (ArithmeticException e) {
             // ok
             assertEquals(t, o.getLastThreadAndReset());
+        }
+
+        try {
+            ro.triggerError();
+            fail("thrown error should have bubbled here");
+        } catch (Error e) {
+            // ok
+            assertEquals(t, o.getLastThreadAndReset());
+            assertEquals("not an Exception", e.getMessage());
         }
 
         ((Stoppable)ro).stop();

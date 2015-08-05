@@ -46,7 +46,7 @@ public class InterThreadProxy implements Runnable {
 
         private Object result;
 
-        private Exception error;
+        private Throwable error;
 
         private boolean completed;
 
@@ -72,11 +72,11 @@ public class InterThreadProxy implements Runnable {
             this.result = result;
         }
 
-        public Exception getError() {
+        public Throwable getError() {
             return error;
         }
 
-        public void setError(Exception error) {
+        public void setError(Throwable error) {
             this.error = error;
         }
 
@@ -100,7 +100,7 @@ public class InterThreadProxy implements Runnable {
         this.target = target;
     }
 
-    private synchronized Object callMethodAndWait(MethodCall methodCall) throws Exception {
+    private synchronized Object callMethodAndWait(MethodCall methodCall) throws Throwable {
         methodCalls.put(methodCall);
 
         methodCall.waitForCompletion();
@@ -132,7 +132,7 @@ public class InterThreadProxy implements Runnable {
                     next.setResult(result);
                 }
             } catch (InvocationTargetException e) {
-                next.setError((Exception) e.getCause());
+                next.setError(e.getCause());
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
