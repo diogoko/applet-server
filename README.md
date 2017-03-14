@@ -21,14 +21,14 @@ Configure the options of the server in `server.properties` and start the `com.gi
 The port where the server will listen to wait for the requests.
 
 <dl>
-    <dt>Required</dt>
-    <dd>Yes</dd>
+<dt>Required</dt>
+<dd>Yes</dd>
     
-    <dt>Default</dt>
-    <dd><code>9998</code></dd>
+<dt>Default</dt>
+<dd><code>9998</code></dd>
     
-    <dt>Example</dt>
-    <dd><code>port = 9998</code></dd>
+<dt>Example</dt>
+<dd><code>port = 9998</code></dd>
 </dl>
 
 ## allowOrigin
@@ -38,14 +38,14 @@ A comma-separated list of the URLs that are allowed in the `Origin` header. All 
 Using `*` means that any origin is allowed.
 
 <dl>
-    <dt>Required</dt>
-    <dd>Yes</dd>
+<dt>Required</dt>
+<dd>Yes</dd>
     
-    <dt>Default</dt>
-    <dd><code>*</code></dd>
+<dt>Default</dt>
+<dd><code>*</code></dd>
     
-    <dt>Example</dt>
-    <dd><code>allowOrigin = ht<span>tp:</span>//www.example.com/applets/calculator.html</code></dd>
+<dt>Example</dt>
+<dd><code>allowOrigin = ht<span>tp:</span>//www.example.com/applets/calculator.html</code></dd>
 </dl>
 
 # API
@@ -70,7 +70,7 @@ The `applet` field has the format:
 | Field    | Type   | Default     | Description                                                                                                                               |
 |----------|--------|-------------|-------------------------------------------------------------------------------------------------------------------------------------------|
 | name     | string | (generated) | The name that will identify the applet. If no name is specified, a unique name will be generated.                                         |
-| codeBase | string |             | The root URL from where `code` and `archive` will be downloaded                                                                           |
+| codeBase | string |             | The root URL from where `code` and `archive` will be downloaded (*always ending in `/`*)                                                                           |
 | code     | string |             | The main class of the applet. A suffix of `.class` will be ignored. Paths are relative to the `codeBase` parameter.                       |
 | archive  | string | null        | The comma-separated list of JAR files that contain the applet's classes and dependencies. Paths are relative to the `codeBase` parameter. |
 | width    | number | 400         | The width of the applet if it's visible                                                                                                   |
